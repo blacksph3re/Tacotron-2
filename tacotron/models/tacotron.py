@@ -191,7 +191,7 @@ class Tacotron():
 			if post_condition:
 				log('  linear out:               {}'.format(linear_outputs.shape))
 			log('  <stop_token> out:         {}'.format(stop_token_prediction.shape))
-			log('  Tacotron Parameters       {:.3f} Million.'.format(np.sum([np.prod(v.get_shape().as_list()) for v in self.all_vars]) / 1_000_000))
+#			log('  Tacotron Parameters       {:.3f} Million.'.format(np.sum([np.prod(v.get_shape().as_list()) for v in self.all_vars]) / 1_000_000))
 
 
 	def add_loss(self):

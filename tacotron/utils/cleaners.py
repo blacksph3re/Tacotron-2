@@ -13,7 +13,7 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
 import re
 
 from unidecode import unidecode
-
+from num2words import num2words
 from .numbers import normalize_numbers
 
 # Regular expression matching whitespace:
@@ -42,15 +42,27 @@ _abbreviations = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in 
 ]]
 
 
+# Umlauts are not replaced well by unidecode
+_umlauts = [(re.compile('%s' % x[0], re.IGNORECASE), x[1]) for x in [
+  ('ä', 'ae'),
+  ('ü', 'ue'),
+  ('ö', 'oe'),
+  ('ß', 'ss'),
+]]
+
+
 def expand_abbreviations(text):
   for regex, replacement in _abbreviations:
     text = re.sub(regex, replacement, text)
   return text
 
+def replace_umlauts(text):
+  for regex, replacement in _umlauts:
+    text = re.sub(regex, replacement, text)
+  return text
 
 def expand_numbers(text):
   return normalize_numbers(text)
-
 
 def lowercase(text):
   '''lowercase input tokens.
@@ -80,6 +92,12 @@ def transliteration_cleaners(text):
   text = collapse_whitespace(text)
   return text
 
+def german_cleaners(text):
+  text = lowercase(text)
+  text = replace_umlauts(text)
+  text = convert_to_ascii(text)
+  text = collapse_whitespace(text)
+  return text
 
 def english_cleaners(text):
   '''Pipeline for English text, including number and abbreviation expansion.'''
